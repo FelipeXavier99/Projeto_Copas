@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<link rel="stylesheet" href="styles.css">
+
+<head>
+	<title>addEventListener</title>
+	<meta charset="utf-8" />
+
+	<script src="../jquery.js">
+	</script>
+
+	<script src="../JnAjax.js">
+	</script>
+
+	<script>
+
+		function preencherTabela(tiposLances) {
+			if (!tiposLances || !tiposLances.length){
+				return;
+			}
+			$('#dv1') 
+			.append('<tr><td class="bolded">Tipo de Lance</td><td class="bolded">Ações</td></tr>');
+			let str = ''; 
+			for (let index in tiposLances) {
+				const tipoLance = tiposLances [index];
+				str += (`<tr><td>${tipoLance.nome}&nbsp; &nbsp; &nbsp;</td>
+					    <td><button id="${tipoLance.id_tipo_lance}">
+						<a href = "editTipoLance.html?idTipoLance=${tipoLance.id_tipo_lance}"
+						title = 'Trocar nomme do tipo de lance'</a>Editar</button><button onclick = "deletar(${tipoLance.id_tipo_lance})"><a href = '#' title = 'Excluir tipo de lance'></a>Excluir</button></td></tr>` ) 
+						console.log(str.length)
+			}
+			$ ('#dv1').append(str)
+		}
+
+	// chat gpt
+		
+	function deletar(idTipoLance) {
+		const nome = $('#inputTipoLance').val();
+
+		// Display a confirmation dialog to the user
+		const confirmed = confirm(`Você realmente deseja deletar o item?`);
+		if (!confirmed) {
+			return; // Abort the deletion if the user cancels
+		}
+
+		const callbacks = {};
+		callbacks[200] = (tiposLances) => {
+			alert('O tipo de lance foi deletado com sucesso!');
+			window.location.reload();
+		};
+		callbacks[422] = (retornoDoBackend) =>
+			alert(
+			`O sistema retornou a seguinte mensagem de erro: ${retornoDoBackend.message}`
+			);
+		callbacks['onUnexpectedHttpStatus'] = () =>
+			alert('Ocorreu um erro inesperado ao deletar esse tipo de lance');
+
+		doAnAjaxRequest(`tipoLance/${idTipoLance}`, callbacks, 'DELETE');
+}
+
+		function getIdTipoLance (){
+			const queryString = window.location.search;
+			const urlParams = new URLSearchParams(queryString);	
+			const idTipoLance = urlParams.get('idTipoLance');
+			return idTipoLance		
+		}
+
+	
+
+
+
+// fim chat
+
+// preecnhe tabela do tipo lances
+		$(document).ready(function () {
+			var callbacks = {}
+			callbacks[200] = tiposLances => preencherTabela(tiposLances)
+			doAnAjaxRequest(`tipoLance`, callbacks, 'GET');
+		});
+
+
+	
+
+		
+
+	</script>
+
+</head>
+
+<body background="https://imagens.ne10.uol.com.br/veiculos/_midias/jpg/2022/12/07/806x444/1_chaveamento_copa_do_mundo-22130186.jpg">
+	<h2 style="font-size: 30px">Tabela do tipo de  lance</h2>
+
+	<a href="index1.html"><input type="button"  class="inicio" value="Inicio"> </input></a>
+	
+	<table id="dv1"></table>
+
+	
+	<a href="index1.html"><input type="button"  class="inicio" value="Voltar a pagina Inicial"></input></a>
+	
+	<button class="inserir" onclick="window.location.href='editTipoLance.html'">Inserir Tipo de lance</button>
+
+
+</body>
+
+</html>

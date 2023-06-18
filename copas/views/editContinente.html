@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<link rel="stylesheet" href="styles.css">
+
+<head>
+	<title>addEventListener</title>
+	<meta charset="utf-8" />
+
+	<script src="../jquery.js">// requisição backend funçao com parametros
+	</script>
+
+	<script src="../JnAjax.js">// 
+	</script>
+
+	<script>
+
+function salvar () {
+			const idContinente = getIdContinente();
+			if (!idContinente){
+				inserir();
+				return;
+			}
+			var callbacks = {}
+			callbacks[200] = continentes => alert ('O continente foi atualizado com sucesso!');
+			callbacks[422] = retornoDoBackend => alert (`O sistema retornou a seguinte mensagem de erro: ${retornoDoBackend.message}`);
+
+			callbacks ['onUnexpectedHttpStatus'] = () => 
+			alert ('Ocorreu um erro inesperado ao salvar o continente')
+			
+			const nome = $('#inputContinente').val();
+			doAnAjaxRequest(`continente/${idContinente}`, callbacks,'PATCH',{nome});
+		} 
+
+		
+		function inserir() {
+		var callbacks = {};
+		callbacks[201] = () => {
+			alert('O continente foi inserido com sucesso!')
+			window.location.reload()
+		};
+		callbacks['onUnexpectedHttpStatus'] = () => alert('Ocorreu um erro inesperado ao inserir esse continente.');
+		
+		const nome = $('#inputContinente').val();
+		doAnAjaxRequest('continente', callbacks, 'POST', { nome });
+
+		}
+
+		function getIdContinente (){
+			const queryString = window.location.search;
+			const urlParams = new URLSearchParams(queryString);	
+			const idContinente = urlParams.get('idContinente');
+			return idContinente		
+		}
+
+		
+		$(document).ready(function () {
+			const idContinente = getIdContinente()
+			var callbacks = {}
+			callbacks[200] = continentes => $(`#inputContinente`).val(continentes[0].nome)
+			doAnAjaxRequest(`continente/${idContinente}`, callbacks, 'GET');
+		});
+
+
+	</script>
+
+</head>
+
+<body background="https://imagens.ne10.uol.com.br/veiculos/_midias/jpg/2022/12/07/806x444/1_chaveamento_copa_do_mundo-22130186.jpg">
+
+	<h2 style="font-size: 30px" >Editar Tabela de Continentes</h2>
+
+	<a href="index1.html"><input type="button"  class="inicio" value="Inicio"></input></a>
+	
+	<button class="voltar"><a href = 'continente.html' 
+					title = 'voltar a tabela'>Voltar</a></button>
+						
+	<button class="salvar" onclick="salvar()">Salvar</button></button>
+	
+	<input class="input" id="inputContinente" value="" placeholder="Digite o Continente">
+
+	</table>
+</body>

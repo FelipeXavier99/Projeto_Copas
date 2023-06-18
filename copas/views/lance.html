@@ -1,0 +1,120 @@
+<html lang="pt-br">
+<link rel="stylesheet" href="styles.css">
+
+<head>
+	<title>addEventListener</title>
+	<meta charset="utf-8" />
+
+	<script src="../jquery.js">// requisição backend funçao com parametros
+	</script>
+
+	<script src="../JnAjax.js">
+	</script>
+
+	
+
+	<script>
+
+	
+
+
+	function preencherTabela(lances) {
+    if (!lances || !lances.length) {
+        return;
+    }
+    $('#dv1').append('<tr><td class="bolded">Lance</td><td class="bolded">Jogador 1</td><td class="bolded">Jogador 2</td><td class="bolded">Seleção 1</td><td class="bolded">Seleção 2</td><td class="bolded">Juíz</td><td class="bolded">Copa</td><td class="bolded">País Sede</td><td class="bolded">Ações</td></tr>');
+    let str = '';
+    for (let index in lances) {
+        const lance = lances[index];
+        
+		str += `<tr>
+                    <td>${lance.TipodoLance}&nbsp; &nbsp; &nbsp;</td>
+                    <td>${lance.Jogador1} &nbsp; &nbsp; &nbsp;</td>
+                    <td>${lance.Jogador2} &nbsp; &nbsp; &nbsp;</td>
+                    <td>${lance.Seleção1} &nbsp; &nbsp; &nbsp;</td>
+                    <td>${lance.Seleção2} &nbsp; &nbsp; &nbsp;</td>
+                    <td>${lance.Juiz} &nbsp; &nbsp; &nbsp;</td>
+                    <td>${lance.Copa} &nbsp; &nbsp; &nbsp;</td>
+                    <td>${lance.PaísSede} &nbsp; &nbsp; &nbsp;</td>
+                    <td>
+                        <button id="${lance.idLance}">
+                            <a href="editLance.html?idLance=${lance.idLance}" title="Trocar Lance">Editar</a>
+							
+                        </button>
+                        <button onclick="deletarLance(${lance.idLance})">
+                            <a href="#" title="Excluir Lance">Excluir</a>
+                        </button>
+                    </td>
+                </tr>`;
+
+
+				
+        console.log(str.length);
+    }
+    $('#dv1').append(str);
+} 
+
+
+		function deletarLance(idLance) {
+		const nome = $('#inputLance').val();
+		const confirmed = confirm(`Você realmente deseja deletar este tecnico?`);
+		if (!confirmed) {
+			return; 
+		}
+
+		const callbacks = {};
+		callbacks[200] = (lances) => {
+			alert('O Lance foi deletado com sucesso!');
+			window.location.reload();
+		};
+		callbacks[422] = (retornoDoBackend) =>
+			alert(
+			`O sistema retornou a seguinte mensagem de erro: ${retornoDoBackend.message}`
+			);
+		callbacks['onUnexpectedHttpStatus'] = () =>
+			alert('Ocorreu um erro inesperado ao deletar esse lance');
+
+		doAnAjaxRequest(`lance/${idLance}`, callbacks, 'DELETE');
+	}
+
+	function getIdLance(){
+			const queryString = window.location.search;
+			const urlParams = new URLSearchParams(queryString);	
+			const idLance = urlParams.get('idLance');
+			return idLance	
+		}
+
+	
+
+		$(document).ready(function () {
+			var callbacks = {}
+			callbacks[200] =lances => preencherTabela(lances)
+			doAnAjaxRequest(`lance`, callbacks, 'GET');
+		});
+	
+		
+	
+
+	</script>
+	 
+
+</head>
+
+<body background="https://imagens.ne10.uol.com.br/veiculos/_midias/jpg/2022/12/07/806x444/1_chaveamento_copa_do_mundo-22130186.jpg">
+
+	<h2 style="font-size: 30px">Tabela de Lance</h2>
+	
+	<table id="dv1"></table>
+
+	<a href="index1.html"><input type="button"  class="inicio" value="Voltar a pagina Inicial"></input></a>
+	
+	<button class="inserir" onclick="window.location.href='editLance.html'">Inserir Lance</button>
+
+
+
+	
+
+
+</body>
+
+</html>

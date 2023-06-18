@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<link rel="stylesheet" href="styles.css">
+
+<head>
+	<title>Seleção</title>
+	<meta charset="utf-8" />
+
+	<script src="../JnAjax.js">
+	</script>
+
+	<script src="../jquery.js">// requisição backend funçao com parametros
+	</script>
+
+
+	<script>
+		function preencherTabela(selecoes) {
+			if (!selecoes || !selecoes.length) {
+				return;
+			}
+			$('#dv1').append('<tr><td class="bolded">Selecao</td><td class="bolded">Continente</td><td class="bolded">Ações</td></tr>');
+			let str = '';
+			for (let index in selecoes) {
+				const linhaDoBancoDeDados = selecoes[index];
+				str += `<tr>
+						  <td>${linhaDoBancoDeDados.selecao}</td>
+						  <td>${linhaDoBancoDeDados.continente}</td>
+						  <td>
+							<button id="${linhaDoBancoDeDados.idSelecao}">
+							  <a href="editSelecao.html?idSelecao=${linhaDoBancoDeDados.idSelecao}" title="Editar seleção">Editar</a>
+							</button>
+							<button onclick="deletar(${linhaDoBancoDeDados.idSelecao})">
+							  <a href="#" title="Excluir seleção">Excluir</a>
+							</button>
+						  </td>
+						</tr>`;
+			}
+			$('#dv1').append(str);
+		}
+
+		function deletar(idSelecao) {
+			const confirmed = confirm(`Você realmente deseja deletar esta seleção?`);
+			if (!confirmed) {
+				return;
+			}
+
+			const callbacks = {};
+			callbacks[200] = (selecoes) => {
+				alert('A seleção foi deletada com sucesso!');
+				window.location.reload();
+			};
+			callbacks[422] = (retornoDoBackend) =>
+				alert(`O sistema retornou a seguinte mensagem de erro: ${retornoDoBackend.message}`);
+			callbacks['onUnexpectedHttpStatus'] = () =>
+				alert('Ocorreu um erro inesperado ao deletar esta seleção');
+
+			doAnAjaxRequest(`selecao/${idSelecao}`, callbacks, 'DELETE');
+		}
+
+		function getIdSelecao() {
+			const queryString = window.location.search;
+			const urlParams = new URLSearchParams(queryString);
+			const idSelecao = urlParams.get('idSelecao');
+			return idSelecao;
+		}
+
+		$(document).ready(function () {
+			var callbacks = {}
+			callbacks[200] = selecoes => preencherTabela(selecoes)
+			doAnAjaxRequest(`selecao`, callbacks, 'GET');
+		});
+
+		
+
+	</script>
+
+</head>
+
+<body background="https://imagens.ne10.uol.com.br/veiculos/_midias/jpg/2022/12/07/806x444/1_chaveamento_copa_do_mundo-22130186.jpg">
+
+	<h2 style="font-size: 30px">Tabela de Selecao</h2>
+	
+	<table id="dv1"></table>
+
+	<a href="index1.html"><input type="button"  class="inicio" value="Voltar a pagina Inicial"></input></a>
+	
+	<button class="inserir" onclick="window.location.href='editSelecao.html'">Inserir Selecao</button>
+
+	
+
+</body>
+
+</html>

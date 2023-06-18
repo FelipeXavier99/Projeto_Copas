@@ -1,0 +1,168 @@
+codigo pronto
+<!DOCTYPE html>
+<html lang="pt-br">
+<link rel="stylesheet" href="styles.css">
+
+<head>
+	<title>Editar Seleção</title>
+	<meta charset="utf-8" />
+
+	<script src="../jquery.js">// requisição backend funçao com parametros
+	</script>
+
+	<script src="../JnAjax.js">// 
+	</script>
+
+	<script>
+
+		function salvar() {
+			const idSelecao = getIdSelecao();
+			if (!idSelecao) {
+				inserir();
+				return;
+
+			}
+			var callbacks = {}
+			//alteracao XAVIER
+			callbacks[200] = selecao => alert('A Seleção foi atualizada com sucesso!');
+			callbacks[422] = retornoDoBackend => alert(`O sistema retornou a seguinte mensagem de erro: ${retornoDoBackend.message}`);
+
+			callbacks['onUnexpectedHttpStatus'] = () =>
+				alert('Ocorreu um erro inesperado ao salvar a Selecao')
+
+			const continente = $('#inputContinente option:selected').text();
+			const idPais = $('#listaDeSelecoes').val();
+			alert(idPais);
+			doAnAjaxRequest(`selecao/${idSelecao}`, callbacks, 'PATCH', { continente, idPais });
+
+		}
+
+		function inserir() {
+			var callbacks = {};
+			callbacks[201] = () => {
+				alert('A Seleção foi inserida com sucesso!');
+				window.location.reload();
+			};
+			callbacks['onUnexpectedHttpStatus'] = () => alert('Ocorreu um erro inesperado ao inserir essa seleção.');
+
+			const nomePais = $('#listaDeSelecoes').val();
+			const continente = $('#inputContinente option:selected').text();
+			alert(nomePais);
+			doAnAjaxRequest('selecao', callbacks, 'POST', { nomePais, continente });
+		}
+
+     
+		function getIdSelecao() {
+			const queryString = window.location.search;
+			const urlParams = new URLSearchParams(queryString);
+			const idSelecao = urlParams.get('idSelecao');
+			return idSelecao;
+		}
+		
+	
+
+
+
+		
+      // nao está executando
+
+		function getIdContinente() {
+
+			const queryString = window.location.search;
+			const urlParams = new URLSearchParams(queryString);
+			const idSelecao = urlParams.get('idContinente');
+			return idContinente;
+			
+		}
+		
+
+
+/*
+// funcao anterior sem o "option selecione contine.."
+function functionInputContinente() {
+	$('#inputContinente').prop('readonly', getIdSelecao());// n consigo executar o getContinente
+	let callbacks = {};
+	callbacks[200] = continente => {
+		let options = "";
+		for (let indice in continente) {
+			const continen = continente[indice];
+			options += `<option value="${continen.id}">${continen.nome}</option>`;
+		}
+		document.getElementById('inputContinente').innerHTML = options;
+	};
+	doAnAjaxRequest(`continente`, callbacks, 'GET');
+}
+*/
+
+// Funcao pa preencher o INPUT Continente
+function functionInputContinente() {
+  let options = '<option disabled selected>Selecione o Continente</option>';
+  let callbacks = {};
+  callbacks[200] = continente => {
+    for (let indice in continente) {
+      const continen = continente[indice];
+      options += `<option value="${continen.id}">${continen.nome}</option>`;
+    }
+    $('#inputContinente').html(options);
+  };
+  doAnAjaxRequest(`continente`, callbacks, 'GET');
+}
+
+
+	  
+
+
+$(document).ready(function () {
+  functionInputContinente(); // Invocando o INPUT Continente!
+
+  let callbacks1 = {};
+  callbacks1[200] = sel => {
+    let options = "";
+    // Alteracao Xavier
+    for (let indice in sel) {
+      const selecao = sel[indice];
+      options += `<option value="${selecao.id}">${selecao.nome}</option>`;
+    }
+    document.getElementById('listaDeSelecoes').innerHTML = options;
+
+    const idSelecao = getIdSelecao();
+    var callbacks2 = {};
+    callbacks2[200] = sel => {
+      $(`#listaDeSelecoes`).val(sel[0].nome);
+      const idSelecao = sel[0].id_selecao;
+    
+    }
+	//pega o id get para poder editar
+    doAnAjaxRequest(`selecao/${idSelecao}`, callbacks2, 'GET');
+  }
+  doAnAjaxRequest(`sel`, callbacks1, 'GET');
+});
+
+		
+	</script>
+
+</head>
+
+<body
+	background="https://imagens.ne10.uol.com.br/veiculos/_midias/jpg/2022/12/07/806x444/1_chaveamento_copa_do_mundo-22130186.jpg">
+
+	<h2 style="font-size: 30px">Editar Tabela de Seleção</h2>
+
+	<a href="index1.html"><input type="button" class="inicio" value="Inicio"></input></a>
+
+	<button class="voltar"><a href='selecao.html' title='voltar a tabela'>Voltar</a></button>
+
+	<button class="salvar" onclick="salvar()">Salvar</button></button>
+
+
+	<select class="input" id="inputContinente"></select> 
+	
+	 <!-- <input class="input1" id="listaDeSelecoes">  -->
+	
+	 <input class="input1" id="listaDeSelecoes" placeholder="Digite a Seleção">
+	 
+
+	 
+
+	</table>
+</body>

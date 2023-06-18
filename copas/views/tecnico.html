@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<link rel="stylesheet" href="styles.css">
+
+<head>	
+	<title>addEventListener</title>
+	<meta charset="utf-8" />
+
+	<script src="../jquery.js">// requisição backend funçao com parametros
+	</script>
+
+	<script src="../JnAjax.js">// 
+	</script>
+
+	<script>
+
+		function preencherTabela(tecnicos) {
+			if (!tecnicos || !tecnicos.length){
+				return;
+			}
+			$('#dv1') 
+			.append('<tr><td class="bolded">Tecnicos</td><td class="bolded">Nascimento</td><td class="bolded">Ações</td></tr>');
+			let str = '';
+			for (let index in tecnicos) {
+				const tecnico = tecnicos [index];
+				str += (`<tr><td>${tecnico.nome}&nbsp; &nbsp; &nbsp;</td>
+                            <td>${tecnico.ano_nascimento}&nbsp; &nbsp; &nbsp;</td>
+					    <td><button id="${tecnico.id_tecnico}">
+						<a href = "editTecnico.html?idTecnico=${tecnico.id_tecnico}"
+						title = 'Trocar o Tecnico'</a>Editar</button><button onclick = "deletarTecnico(${tecnico.id_tecnico})"><a href = '#' title = 'Excluir Tecnico'></a>Excluir</button></td></tr>` ) 
+						console.log(str.length)
+			}
+			$ ('#dv1').append(str);
+		}
+		
+	function deletarTecnico(idTecnico) {
+		const nome = $('#inputTecnico').val();
+		const confirmed = confirm(`Você realmente deseja deletar este tecnico?`);
+		if (!confirmed) {
+			return; 
+		}
+
+		const callbacks = {};
+		callbacks[200] = (tecnicos) => {
+			alert('O tecnico foi deletado com sucesso!');
+			window.location.reload();
+		};
+		callbacks[422] = (retornoDoBackend) =>
+			alert(
+			`O sistema retornou a seguinte mensagem de erro: ${retornoDoBackend.message}`
+			);
+		callbacks['onUnexpectedHttpStatus'] = () =>
+			alert('Ocorreu um erro inesperado ao deletar esse tecnico');
+
+		doAnAjaxRequest(`tecnico/${idTecnico}`, callbacks, 'DELETE');
+	}
+
+	function getIdTecnico (){
+			const queryString = window.location.search;
+			const urlParams = new URLSearchParams(queryString);	
+			const idTecnico = urlParams.get('idTecnico');
+			return idTecnico	
+		}
+
+		$(document).ready(function () {
+			var callbacks = {}
+			callbacks[200] = tecnicos => preencherTabela(tecnicos)
+			doAnAjaxRequest(`tecnico`, callbacks, 'GET');
+		});
+	
+		$(document).ready(function () {
+			const idTecnico = getIdTecnico()
+			var callbacks = {}
+			callbacks[200] = tecnicos => $('#inputIdTecnico').val(tecnicos[0].nome)
+			doAnAjaxRequest(`tecnico/${idTecnico}`, callbacks, 'GET');
+
+		});
+		$(document).ready(function () {
+			const idTecnico = getIdTecnico()
+			var callbacks = {}
+			callbacks[200] = tecnicos => $('#inputIdNascimento').val(tecnicos[0].ano_nascimento)
+			doAnAjaxRequest(`tecnico/${idTecnico}`, callbacks, 'GET');
+
+		});
+		$(document).ready(function() {
+					const queryString = window.location.search;
+					const urlParams = new URLSearchParams(queryString);
+					const idTecnico = urlParams.get('idTecnico');
+					const idTecnicoString = String(idTecnico);
+});
+
+
+	</script>
+
+</head>
+
+<body background="https://imagens.ne10.uol.com.br/veiculos/_midias/jpg/2022/12/07/806x444/1_chaveamento_copa_do_mundo-22130186.jpg">
+
+	<h2 style="font-size: 30px">Tabela de Técnico</h2>
+	
+	<table id="dv1"></table>
+
+	<a href="index1.html"><input type="button"  class="inicio" value="Voltar a pagina Inicial"></input></a>
+	
+	<button class="inserir" onclick="window.location.href='editTecnico.html'">Inserir Tecnico</button>
+
+
+</body>
+
+</html>

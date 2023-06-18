@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<link rel="stylesheet" href="styles.css">
+
+<head>
+	<title>addEventListener</title>
+	<meta charset="utf-8" />
+
+	<script src="../jquery.js">// requisição backend funçao com parametros
+	</script>
+
+	<script src="../JnAjax.js">// 
+	</script>
+
+	<script>
+
+function salvar () {
+			const idTecnico = getIdTecnico();
+			if (!idTecnico){
+				inserir();
+				return;
+			}
+			var callbacks = {}
+			callbacks[200] = tecnicos => alert ('O tecnico foi atualizado com sucesso!');
+			callbacks[422] = retornoDoBackend => alert (`O sistema retornou a seguinte mensagem de erro: ${retornoDoBackend.message}`);
+
+			callbacks ['onUnexpectedHttpStatus'] = () => 
+			alert ('Ocorreu um erro inesperado ao salvar o idioma')
+			
+			const nome = $('#inputTecnico').val();
+			const ano_nascimento = $('#inputNascimento').val();
+			doAnAjaxRequest(`tecnico/${idTecnico}`, callbacks,'PATCH',{nome,ano_nascimento});//nao e necesssario ser igual da nome tabela 
+}
+
+
+		function inserir() {
+		var callbacks = {};
+		callbacks[201] = () => {
+			alert('O tecnico foi inserido com sucesso!')
+			window.location.reload()
+		};
+		callbacks['onUnexpectedHttpStatus'] = () => alert('Ocorreu um erro inesperado ao inserir esse tecnico.');
+		
+		const nome = $('#inputTecnico').val();
+		const ano_nascimento = $('#inputNascimento').val();
+		doAnAjaxRequest('tecnico', callbacks, 'POST', { nome, ano_nascimento});
+	
+
+		}
+	
+		function getIdTecnico (){
+			const queryString = window.location.search;
+			const urlParams = new URLSearchParams(queryString);	
+			const idTecnico = urlParams.get('idTecnico');
+			return idTecnico		
+		}
+
+		$(document).ready(function () {
+			const idTecnico = getIdTecnico()
+			var callbacks = {}
+			callbacks[200] = tecnicos => $(`#inputTecnico`).val(tecnicos[0].nome)
+			doAnAjaxRequest(`tecnico/${idTecnico}`, callbacks, 'GET')
+		});
+
+		$(document).ready(function () {
+			const idTecnico = getIdTecnico()
+			var callbacks = {}
+			callbacks[200] = tecnicos => $(`#inputNascimento`).val(tecnicos[0].ano_nascimento)
+			doAnAjaxRequest(`tecnico/${idTecnico}`, callbacks, 'GET');
+		});
+
+	
+	</script>
+
+</head>
+
+<body background="https://imagens.ne10.uol.com.br/veiculos/_midias/jpg/2022/12/07/806x444/1_chaveamento_copa_do_mundo-22130186.jpg">
+
+	<h2 style="font-size: 30px" >Editar Tabela de Tecnico</h2>
+
+	<a href="index1.html"><input type="button"  class="inicio" value="Inicio"></input></a>
+	
+	<button class="voltar"><a href = 'tecnico.html' 
+					title = 'voltar a tabela'>Voltar</a></button>
+						
+	<button class="salvar" onclick="salvar()">Salvar</button></button>
+	
+	<input class="input" id="inputTecnico" placeholder="Inserir Técnico">
+
+	<input class="input1" id="inputNascimento" placeholder="Inserir Nascimento" >
+
+	</table>
+</body>

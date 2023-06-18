@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<link rel="stylesheet" href="styles.css">
+
+<head>
+	<title>Editar Copa</title>
+	<meta charset="utf-8" />
+
+	<script src="../jquery.js">// requisição backend funçao com parametros
+	</script>
+
+	<script src="../JnAjax.js">// 
+	</script>
+
+	<script>
+
+		function salvar() {
+			const idCopa = getIdCopa();
+			if (!idCopa) {
+				inserir();
+				return;
+			}
+			var callbacks = {}
+			callbacks[200] = copas => alert('A Copa foi atualizada com sucesso!');
+			callbacks[422] = retornoDoBackend => alert(`O sistema retornou a seguinte mensagem de erro: ${retornoDoBackend.message}`);
+
+			callbacks['onUnexpectedHttpStatus'] = () =>
+				alert('Ocorreu um erro inesperado ao salvar a Copa')
+
+			const ano = $('#inputCopa').val();
+			const idPais = $('#listaDePaises').val();
+			alert(idPais);
+			doAnAjaxRequest(`copa/${idCopa}`, callbacks, 'PATCH', { ano, idPais });
+		}
+
+		function inserir() {
+			var callbacks = {};
+			callbacks[201] = () => {
+				alert('A copa foi inserida com sucesso!')
+				window.location.reload()
+			};
+			callbacks['onUnexpectedHttpStatus'] = () => alert('Ocorreu um erro inesperado ao inserir essa Copa.');
+
+			const ano = $('#inputCopa').val();
+			const nomePais = $('#listaDePaises').val();
+			alert(nomePais);
+			doAnAjaxRequest('copa', callbacks, 'POST', { ano, nomePais });
+
+		}
+
+		function getIdCopa() {
+			const queryString = window.location.search;
+			const urlParams = new URLSearchParams(queryString);
+			const idCopa = urlParams.get('idCopa');
+			return idCopa
+		}
+        
+		$(document).ready(function () {
+			$('#inputCopa').prop('readonly', getIdCopa());
+			let callbacks = {};
+			callbacks[200] = paises => {
+				//paises.sort((a,b)=> a.nome.trim() < b.nome.trim() ? -1: a.nome.trim()> b.nome.trim() ? 1: 0);
+				let options = "";
+				for (let indice in paises) {
+					const pais = paises[indice];
+					options += `<option value="${pais.id}">${pais.nome}</option>`
+				}
+				alert(options)
+			
+				//aqui q mostra as sellecoes no input
+				document.getElementById('listaDePaises').innerHTML = options;
+
+				const idCopa = getIdCopa()
+				var callbacks = {}
+				callbacks[200] = copas => {
+					 $(`#inputCopa`).val(copas[0].ano);
+					const idPaisSede = copas[0].id_pais_sede;
+					document.getElementById('listaDePaises').value = idPaisSede;
+					}
+				doAnAjaxRequest(`copa/${idCopa}`, callbacks, 'GET');
+
+
+			}
+			doAnAjaxRequest(`paises`, callbacks, 'GET');
+		});
+	</script>
+
+</head>
+
+<body
+	background="https://imagens.ne10.uol.com.br/veiculos/_midias/jpg/2022/12/07/806x444/1_chaveamento_copa_do_mundo-22130186.jpg">
+
+	<h2 style="font-size: 30px">Editar Tabela de Copas</h2>
+
+	<a href="index1.html"><input type="button" class="inicio" value="Inicio"></input></a>
+
+	<button class="voltar"><a href='copa.html' title='voltar a tabela'>Voltar</a></button>
+
+	<button class="salvar" onclick="salvar()">Salvar</button></button>
+
+	<input class="input" id="inputCopa" readonly="true" placeholder="Digite o Ano da Copa">
+
+	<select class="input1" id="listaDePaises"></select>
+
+	</table>
+</body>

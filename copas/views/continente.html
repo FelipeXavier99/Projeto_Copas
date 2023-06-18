@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<link rel="stylesheet" href="styles.css">
+
+<head>	
+	<title>addEventListener</title>
+	<meta charset="utf-8" />
+
+	<script src="../jquery.js">// requisição backend funçao com parametros
+	</script>
+
+	<script src="../JnAjax.js">// 
+	</script>
+
+	<script>
+
+		function preencherTabela(continentes) {
+			if (!continentes || !continentes.length){
+				return;
+			}
+			$('#dv1') 
+			.append('<tr><td class="bolded">Continentes</td><td class="bolded">Ações</td></tr>');
+			let str = '';
+			for (let index in continentes) {
+				const continente = continentes [index];
+				str += (`<tr><td>${continente.nome}&nbsp; &nbsp; &nbsp;</td>
+					    <td><button id="${continente.id_continente}">
+						<a href = "editContinente.html?idContinente=${continente.id_continente}"
+						title = 'Trocar o Continente'</a>Editar</button><button onclick = "deletarCon(${continente.id_continente})"><a href = '#' title = 'Excluir Continente'></a>Excluir</button></td></tr>` ) 
+						console.log(str.length)
+			}
+			$ ('#dv1').append(str);
+		}
+		
+	function deletarCon(idContinente) {
+		const nome = $('#inputContinente').val();
+		const confirmed = confirm(`Você realmente deseja deletar este continente?`);
+		if (!confirmed) {
+			return; 
+		}
+
+		const callbacks = {};
+		callbacks[200] = (continentes) => {
+			alert('O continente foi deletado com sucesso!');
+			window.location.reload();
+		};
+		callbacks[422] = (retornoDoBackend) =>
+			alert(
+			`O sistema retornou a seguinte mensagem de erro: ${retornoDoBackend.message}`
+			);
+		callbacks['onUnexpectedHttpStatus'] = () =>
+			alert('Ocorreu um erro inesperado ao deletar esse idioma');
+
+		doAnAjaxRequest(`continente/${idContinente}`, callbacks, 'DELETE');
+	}
+
+	function getIdContinente (){
+			const queryString = window.location.search;
+			const urlParams = new URLSearchParams(queryString);	
+			const idContinente = urlParams.get('idContinente');
+			return idContinente	
+		}
+
+		$(document).ready(function () {
+			var callbacks = {}
+			callbacks[200] = continentes => preencherTabela(continentes)
+			doAnAjaxRequest(`continente`, callbacks, 'GET');
+		});
+	
+	
+	
+
+	</script>
+
+</head>
+
+<body background="https://imagens.ne10.uol.com.br/veiculos/_midias/jpg/2022/12/07/806x444/1_chaveamento_copa_do_mundo-22130186.jpg">
+
+	<h2 style="font-size: 30px">Tabela de Continente</h2>
+	
+	<table id="dv1"></table>
+
+	<a href="index1.html"><input type="button"  class="inicio" value="Voltar a pagina Inicial"></input></a>
+	
+	<button class="inserir" onclick="window.location.href='editContinente.html'">Inserir Continente</button>
+
+
+</body>
+
+</html>

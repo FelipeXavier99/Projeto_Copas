@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<link rel="stylesheet" href="styles.css">
+
+<head>
+	<title>Copar</title>
+	<meta charset="utf-8" />
+
+	<script src="../JnAjax.js">
+	</script>
+
+	<script src="../jquery.js">
+	</script>
+
+
+	<script>
+		function preencherTabela(copas) {
+  if (!copas || !copas.length) {
+    return;
+  }
+  $('#dv1').append('<tr><td class="bolded">Sede</td><td class="bolded">Ano</td><td class="bolded">Ações</td></tr>');
+  let str = '';
+  for (let index in copas) {
+    const copa = copas[index];
+    str += `<tr>
+              <td>${copa.nome}</td>
+              <td>${copa.ano}</td>
+              <td>
+                <button id="${copa.id_pais_sede}">
+                  <a href="editCopa.html?idCopa=${copa.id_pais_sede}" title="Trocar o Ano da copa">Editar</a>
+                </button>
+                <button onclick="deletar(${copa.ano})">
+                  <a href="#" title="Excluir Idioma">Excluir</a>
+                </button>
+              </td>
+            </tr>`;
+  }
+  $('#dv1').append(str);
+}
+
+	
+function deletar(idCopa) {
+  const confirmed = confirm(`Você realmente deseja deletar esta copa?`);
+  if (!confirmed) {
+    return;
+  }
+
+  const callbacks = {};
+  callbacks[200] = (copas) => {
+    alert('A copa foi deletada com sucesso!');
+    window.location.reload();
+  };
+  callbacks[422] = (retornoDoBackend) =>
+    alert(`O sistema retornou a seguinte mensagem de erro: ${retornoDoBackend.message}`);
+  callbacks['onUnexpectedHttpStatus'] = () =>
+    alert('Ocorreu um erro inesperado ao deletar esta copa');
+
+  doAnAjaxRequest(`copa/${idCopa}`, callbacks, 'DELETE');
+}
+
+function getIdCopa() {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const idCopa = urlParams.get('idCopa');
+  return idCopa;
+}
+
+
+		$(document).ready(function () {
+			var callbacks = {}
+			callbacks[200] = copas => preencherTabela(copas)
+			doAnAjaxRequest(`copa`, callbacks, 'GET');
+		});
+	
+				$(document).ready(function () {
+				const idCopa = getIdCopa();
+				var callbacks = {};
+				callbacks[200] = (copas) => $('#inputIdCopa').val(copas[0].ano);
+				doAnAjaxRequest(`copa/${idCopa}`, callbacks, 'GET');
+		});
+
+
+		$(document).ready(function () {
+			const idCopa = getIdCopa()
+			var callbacks = {}
+			callbacks[200] =copas => $('#inputIdPais').val(copas[0].nomePais)
+			doAnAjaxRequest(`tecnico/${idTecnico}`, callbacks, 'GET');
+
+		});
+
+		$(document).ready(function () {
+			const queryString = window.location.search;
+			const urlParams = new URLSearchParams(queryString);
+			const idCopa = urlParams.get('idCopa');
+});
+
+	
+
+	</script>
+
+</head>
+
+<body background="https://imagens.ne10.uol.com.br/veiculos/_midias/jpg/2022/12/07/806x444/1_chaveamento_copa_do_mundo-22130186.jpg">
+
+	<h2 style="font-size: 30px">Tabela de Copa</h2>
+	
+	<table id="dv1"></table>
+
+	<a href="index1.html"><input type="button"  class="inicio" value="Voltar a pagina Inicial"></input></a>
+	
+	<button class="inserir" onclick="window.location.href='editCopa.html'">Inserir Copa</button>
+
+
+</body>
+
+</html>

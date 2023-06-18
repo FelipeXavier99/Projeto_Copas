@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<link rel="stylesheet" href="styles.css">
+
+<head>	
+	<title>addEventListener</title>
+	<meta charset="utf-8" />
+
+	<script src="../jquery.js">// requisição backend funçao com parametros
+	</script>
+
+	<script src="../JnAjax.js">// 
+	</script>
+
+	<script>
+
+		function preencherTabela(escalacao) {
+			if (!escalacoes || !escalacoes.length){
+				return;
+			}
+			$('#dv1') 
+			.append('<tr><td>Escalacoes</td><td>Ações</td></tr>');
+			let str = '';
+			for (let index in escalacoes) {
+				const escalacao = escalacoes [index];
+				str += (`<tr><td>${escalacao.nome}&nbsp; &nbsp; &nbsp;</td>
+					    <td><button id="${escalacao.id_jogo}">
+						<a href = "editEscalacao.html?idJogador=${escalacao.id_jogador}"
+						title = 'Trocar a Escalacao'</a>Editar</button>
+						<button onclick = "deletar(${escalacao.id_jogador})"><a href = '#' title = 'Excluir Jogador'></a>Excluir</button></td></tr>` ) 
+						console.log(str.length)
+			}
+			$ ('#dv1').append(str);
+		}
+		
+	function deletar(idJogador) {
+		const nome = $('#inputJogador').val();
+		const confirmed = confirm(`Você realmente deseja deletar este jogador?`);
+		if (!confirmed) {
+			return; 
+		}
+
+		const callbacks = {};
+		callbacks[200] = (escalacoes) => {
+			alert('O jogador foi deletado com sucesso!');
+			window.location.reload();
+		};
+		callbacks[422] = (retornoDoBackend) =>
+			alert(
+			`O sistema retornou a seguinte mensagem de erro: ${retornoDoBackend.message}`
+			);
+		callbacks['onUnexpectedHttpStatus'] = () =>
+			alert('Ocorreu um erro inesperado ao deletar esse jogador');
+
+		doAnAjaxRequest(`escalacao/${idJogador}`, callbacks, 'DELETE');
+	}
+
+	function getIdJogador (){
+			const queryString = window.location.search;
+			const urlParams = new URLSearchParams(queryString);	
+			const idJogador = urlParams.get('idJogador');
+			return idJogador	
+		}
+
+		$(document).ready(function () {
+			var callbacks = {}
+			callbacks[200] = escalacoes => preencherTabela(escalacoes)
+			doAnAjaxRequest(`escalacao`, callbacks, 'GET');
+		});
+	
+		$(document).ready(function () {
+			const idEscalacao = getIdContinente()
+			var callbacks = {}
+			callbacks[200] = continentes => $('#inputIdContinente').val(continentes[0].nome)
+			doAnAjaxRequest(`continente/${idContinente}`, callbacks, 'GET');
+
+		});
+
+		$(document).ready(function() {
+					const queryString = window.location.search;
+					const urlParams = new URLSearchParams(queryString);
+					const idContinente = urlParams.get('idContinente');
+					const idContinenteString = String(idContinente);
+});
+
+
+	</script>
+
+</head>
+
+<body background="https://imagens.ne10.uol.com.br/veiculos/_midias/jpg/2022/12/07/806x444/1_chaveamento_copa_do_mundo-22130186.jpg">
+
+	<h2 style="font-size: 30px">Tabela de Continente</h2>
+	
+	<table id="dv1"></table>
+
+	<a href="index1.html"><input type="button"  class="inicio" value="Voltar a pagina Inicial"></input></a>
+	
+	<button class="inserir" onclick="window.location.href='editContinente.html'">Inserir Continente</button>
+
+
+</body>
+
+</html>

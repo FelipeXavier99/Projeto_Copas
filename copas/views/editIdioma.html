@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<link rel="stylesheet" href="styles.css">
+
+<head>
+	<title>addEventListener</title>
+	<meta charset="utf-8" />
+
+	<script src="../jquery.js">// requisição backend funçao com parametros
+	</script>
+
+	<script src="../JnAjax.js">// 
+	</script>
+
+	<script>
+
+function salvar () {
+			const idIdioma = getIdIdioma();
+			if (!idIdioma){
+				inserir();
+				return;
+			}
+			
+			var callbacks = {}
+			callbacks[200] = idiomas => alert ('O idioma foi atualizado com sucesso!');
+			callbacks[422] = retornoDoBackend => alert (`O sistema retornou a seguinte mensagem de erro: ${retornoDoBackend.message}`);
+
+			callbacks ['onUnexpectedHttpStatus'] = () => 
+			alert ('Ocorreu um erro inesperado ao salvar o idioma')
+			
+			const nome = $('#inputIdioma').val();
+			doAnAjaxRequest(`idioma/${idIdioma}`, callbacks,'PATCH',{nome});
+		} 
+
+		function inserir() {
+			
+		var callbacks = {};
+		callbacks[201] = () => {
+			alert('O idioma foi inserido com sucesso!')
+			window.location.reload()
+		};
+		callbacks['onUnexpectedHttpStatus'] = () => alert('Ocorreu um erro inesperado ao inserir esse tipo de lance.');
+		
+		const nome = $('#inputIdioma').val();
+		doAnAjaxRequest('idioma', callbacks, 'POST', { nome });
+
+		}
+
+		function getIdIdioma (){
+			const queryString = window.location.search;
+			const urlParams = new URLSearchParams(queryString);	
+			const idIdioma = urlParams.get('idIdioma');//vai pro server/idioma/e seleciona todos os idioma
+			return idIdioma		
+		}
+
+		
+
+
+	</script>
+
+</head>
+
+<body background="https://imagens.ne10.uol.com.br/veiculos/_midias/jpg/2022/12/07/806x444/1_chaveamento_copa_do_mundo-22130186.jpg">
+
+	<h2 style="font-size: 30px" >Editar Tabela de Idiomas</h2>
+
+	<a href="index1.html"><input type="button"  class="inicio" value="Inicio"></input></a>
+	
+	<button class="voltar"><a href = 'idioma.html' 
+					title = 'voltar a tabela'>Voltar</a></button>
+						
+	<button class="salvar" onclick="salvar()">Salvar</button></button>
+	
+	<input class="input" id="inputIdioma" value="" placeholder="Digite o Idioma">
+
+	</table>
+</body>

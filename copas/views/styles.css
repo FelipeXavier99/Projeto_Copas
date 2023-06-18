@@ -1,0 +1,184 @@
+    h1 {
+        color: #c9d0d4; font-family: 'Helvetica Neue', sans-serif;
+        font-size: 46px; font-weight: 100; line-height: 50px; text-align: center; 
+        letter-spacing: 1px; padding: 0 0 40px; border-bottom: double #555;
+       
+    }
+
+    h2 {
+        color:green; font-family: 'Helvetica Neue', sans-serif;
+        font-size: 46px; font-weight: 100; line-height: 50px; text-align: center; 
+        letter-spacing: 1px; padding: 0 0 40px; border-bottom: double #555;
+       
+    }
+   
+     .input{
+        width: 20%; padding: 12px 20px; margin: 8px 0; text-align: center; 
+        box-sizing: border-box; border: none ;font-size: x-large; border-bottom: 2px solid rgb(0, 255, 76);	
+        position: absolute;
+        top: 30%; 
+        left: 40%; 
+        }
+    .input1{
+            width: 20%; padding: 12px 20px; margin: 8px 0; text-align: center; 
+            box-sizing: border-box; border: none ;font-size: x-large; border-bottom: 2px solid rgb(0, 255, 76);	
+            position: absolute;
+            top: 40%; 
+            left: 40%; 
+            }
+
+           
+
+            
+              
+
+
+    .copa{ 
+        width: 20%; padding: 12px 20px; margin: 8px 0; text-align: center; align-items: center;
+        box-sizing: border-box; border: none;border-bottom: 2px solid red;
+        position: absolute;
+        top: 10%;
+        left: 40%;           
+        }
+    .idioma{ 
+        width: 20%; padding: 12px 20px; margin: 8px 0; text-align: center; align-items: center;
+        box-sizing: border-box; border: none;border-bottom: 2px solid red;
+        position: absolute;
+        top: 20%;
+        left: 40%;           
+        }
+    .tipoLance{ 
+        width: 20%; padding: 12px 20px; margin: 8px 0; text-align: center; align-items: center;
+        box-sizing: border-box; border: none;border-bottom: 2px solid red;
+        position: absolute;
+        top: 30%;
+        left: 40%;           
+        }		
+    .lance{ 
+        width: 20%; padding: 12px 20px; margin: 8px 0; text-align: center; align-items: center;
+        box-sizing: border-box; border: none;border-bottom: 2px solid red;
+        position: absolute;
+        top: 40%;
+        left: 40%;           
+        }
+    
+    
+    .continente{ 
+        width: 20%; padding: 12px 20px; margin: 8px 0; text-align: center; align-items: center;
+        box-sizing: border-box; border: none;border-bottom: 2px solid red;
+        position: absolute;
+        top: 50%;
+        left: 40%;           
+        }
+    .paisSede{ 
+        width: 20%; padding: 12px 20px; margin: 8px 0; text-align: center; align-items: center;
+        box-sizing: border-box; border: none;border-bottom: 2px solid red;
+        position: absolute;
+        top: 60%;
+        left: 40%;           
+        }
+    .tecnico{ 
+        width: 20%; padding: 12px 20px; margin: 8px 0; text-align: center; align-items: center;
+        box-sizing: border-box; border: none;border-bottom: 2px solid red;
+        position: absolute;
+        top: 70%;
+        left: 40%;           
+        }
+    .selecao{ 
+        width: 20%; padding: 12px 20px; margin: 8px 0; text-align: center; align-items: center;
+        box-sizing: border-box; border: none;border-bottom: 2px solid red;
+        position: absolute;
+        top: 80%;
+        left: 40%;           
+        }
+       
+     div[id="resposta"]	{
+		box-sizing: border-box; text-align: center; background-color: red;
+		font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; font-size: large;
+        position: absolute;
+        top: 90%;
+		}
+
+    .pagina{
+        width: 20%; padding: 12px 20px; margin: 8px 0; text-align: center; align-items: center;
+        box-sizing: border-box; border: none;border-bottom: 2px solid red;
+        position: absolute;
+        top: 90%;
+        left: 40%; 
+    }
+   	
+    .fundo{
+        height: 400px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+    }
+    .inicio{ 
+        width: 20%; padding: 12px 20px; margin: 8px 0; text-align: center; align-items: center;
+        box-sizing: border-box; border: none;border-bottom: 2px solid rgb(9, 255, 0); 
+        position: absolute;
+        top: 20%;
+        left: 40%;        
+        }
+		
+    #dv1 {
+			box-sizing: border-box;
+			text-align: center;
+			background-repeat: no-repeat;
+			background-size: cover;
+			background-image:url("https://img.elo7.com.br/product/zoom/43EC7BA/capa-painel-redondo-em-tecido-1-50m-tema-copa-do-mundo-festa.jpg");
+			width: 50%;
+			font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+			font-size: large;
+			position: absolute;
+            top: 40%;
+       		left: 25%;
+    		border-radius: 10px;
+			color: black;
+			
+			};
+    button {
+      background-color:white;
+      color: black;
+      cursor: pointer;
+    }
+
+    .voltar{ 
+        width: 20%; padding: 12px 20px; margin: 8px 0; text-align: center; align-items: center;
+        box-sizing: border-box; border: none;border-bottom: 2px solid rgb(9, 255, 0); 
+        position: absolute;
+        top:50%;
+        left: 40%;        
+        }
+    .salvar{ 
+        width: 20%; padding: 12px 20px; margin: 8px 0; text-align: center; align-items: center;
+        box-sizing: border-box; border: none;border-bottom: 2px solid rgb(9, 255, 0); 
+        position: absolute;
+        top:60%;
+        left: 40%;        
+        }
+
+        .inserir{ 
+            width: 20%; padding: 12px 20px; margin: 8px 0; text-align: center; align-items: center;
+            box-sizing: border-box; border: none;border-bottom: 2px solid rgb(9, 255, 0); 
+            position: absolute;
+            left: 40%; 
+            top: 30%;       
+            }
+
+        .bolded { font-weight: bold;
+            color: green;
+        }
+
+      
+
+        #inputContinente, #inputLance,#inputJuiz,#inputJogador1,#inputJogador2 {
+            font-size: 17px;
+        }
+        
+
+              
+
+        
+          

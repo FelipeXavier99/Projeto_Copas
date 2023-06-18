@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<link rel="stylesheet" href="styles.css">
+
+<head>
+	<title>addEventListener</title>
+	<meta charset="utf-8" />
+
+	<script src="../jquery.js">// requisição backend funçao com parametros
+	</script>
+
+	<script src="../JnAjax.js">// 
+	</script>
+
+	<script>
+
+function salvar() {
+			const idLance = getIdLance();
+			if (!idLance) {
+				inserir();
+				return;
+
+			}
+			var callbacks = {}
+			//alteracao XAVIER
+			callbacks[200] = lance => alert('O lance foi atualizada com sucesso!');
+			callbacks[422] = retornoDoBackend => alert(`O sistema retornou a seguinte mensagem de erro: ${retornoDoBackend.message}`);
+
+			callbacks['onUnexpectedHttpStatus'] = () =>
+			alert('Ocorreu um erro inesperado ao salvar o Lance')
+
+		
+		const tipodoLance = $('#inputLance option:selected').text();
+		//const tipodoLance = $('#tipodoLance').val();
+		const jogador1 = $('#inputJogador1').val();
+		const jogador2 = $('#inputJogador2').val();
+		
+			
+		
+			doAnAjaxRequest(`lance/${idLance}`, callbacks, 'PATCH', {tipodoLance,jogador1,jogador2});
+
+		}
+
+
+
+
+
+
+function inserir() {
+	var callbacks = {};
+		callbacks[201] = () => {
+			alert('O Lance foi inserido com sucesso!')
+			window.location.reload()
+		};
+		callbacks['onUnexpectedHttpStatus'] = () => alert('Ocorreu um erro inesperado ao inserir esse Lance.');
+		
+		const tipodoLance = $('#inputLance option:selected').text();
+		//const tipodoLance = $('#inputLance').val();
+		const jogador1 = $('#inputJogador1').val();
+		const jogador2 = $('#inputJogador2').val();
+		const juiz = $('#inputJuiz option:selected').text();
+	
+		
+	
+
+    doAnAjaxRequest('lance', callbacks, 'POST', {tipodoLance,jogador1,jogador2,juiz});
+}
+
+
+
+
+
+function getIdLance(){
+			const queryString = window.location.search;
+			const urlParams = new URLSearchParams(queryString);	
+			const idLance = urlParams.get('idLance');
+			return idLance	
+		}
+
+
+// Funcao pa preencher o INPUT Lance pendende
+function functionInputLance() {
+  let options = '<option disabled selected>Selecione o Tipo do Lance</option>';
+  let callbacks = {};
+  callbacks[200] = lance => {
+    for (let indice in lance) {
+      const lanc = lance[indice];
+      options += `<option value="${lanc.id}">${lanc.nome}</option>`;
+    }
+    $('#inputLance').html(options);
+  };
+  doAnAjaxRequest(`tipoLance`, callbacks, 'GET');
+}
+
+function functionJuizes() {
+  let options = '<option disabled selected>Selecione o Juiz do jogo</option>';
+  let callbacks = {};
+  callbacks[200] = lance => {
+    for (let indice in lance) {
+      const continen = lance[indice];
+      options += `<option value="${continen.id_jogador}">${continen.nome}</option>`;
+    }
+    $('#inputJuiz').html(options);
+  };
+  doAnAjaxRequest(`juiz`, callbacks, 'GET');
+}
+
+$(document).ready(function () {
+	//chama o input select do lance
+	functionJuizes();
+	functionInputLance(); 
+
+	//condiçao para mesclar o Juiz qdo Incluir/Editar
+	const modoEdicao = getIdLance() !== null;
+  if (modoEdicao) {
+    $('#inputJuiz').prop('disabled', true);
+  }
+
+  const idLance = getIdLance();
+  var callbacks = {};
+  callbacks[200] = lances => {
+    $(`#inputLance`).val(lances[0].tipodoLance);
+   // $(`#inputJogador1`).val(lances[0].jogador1);
+    //$(`#inputJogador2`).val(lances[0].jogador2);
+    
+  };
+  doAnAjaxRequest(`lance/${idLance}`, callbacks, 'GET');
+});
+
+
+
+
+
+
+
+		
+		
+
+
+	</script>
+	
+
+	
+	
+    
+
+
+
+
+	<!-- Alterando Tamanho dos Inputs,Fui obrigado a criar pq no antigo só aceita 2 inputs    -->
+	<style>
+		.input2,.input3,.input4,.input5
+		 {
+			font-size: 22px;
+		display: block;
+		width: 20%;
+		padding: 12px 20px;
+		margin: 8px auto; /* Adicionado margin: 8px auto; para centralizar horizontalmente */
+		text-align: center;
+		box-sizing: border-box;
+		border: none;
+		font-size: x-large;
+		border-bottom: 2px solid rgb(0, 255, 76);
+		
+		}
+
+		.button-container {
+		text-align: center;
+		margin-top: 20px;
+	}
+	
+	.button-container button {
+		margin-right: 10px;
+		font-size: 24px; /* Aumentar o tamanho da fonte do botão */
+		width: 125px; /* Definir uma largura fixa para o botão */
+		height: 50px; /* Definir uma altura fixa para o botão */
+	}
+	
+       
+
+		
+	</style>
+
+
+</head>
+
+<body background="https://imagens.ne10.uol.com.br/veiculos/_midias/jpg/2022/12/07/806x444/1_chaveamento_copa_do_mundo-22130186.jpg">
+	<h2 style="font-size: 30px"> Editar Tabela de lance</h2>
+
+	<table id="dv1">
+
+	</table>
+
+	<select class="input5" id="inputJuiz" ></select> 
+	 <select class="input2" id="inputLance" ></select> 
+	<input class="input3" id="inputJogador1" placeholder="Digite o Jogador 1">
+	<input class="input4" id="inputJogador2" placeholder="Digite o Jogador 2">
+
+	
+
+
+
+	<div class="button-container">
+	<button><a href="lance.html" title="voltar a tabela">Voltar</a></button>
+	<button type="submit" onclick="salvar()">Salvar</button>
+</div>
+	
+	
+
+</body>
+
+</html>
