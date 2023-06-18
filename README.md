@@ -1,2 +1,6 @@
 # Projeto_Copas
- Projeto realizado com crud,javascript,html,css,mysql
+
+Grande Projeto realizado com javascript,html,css,ajax e 
+conectado com servidor e com banco mysql pra fazer os cruds!
+
+
