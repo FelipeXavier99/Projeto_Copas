@@ -4,7 +4,7 @@ async function connect(){
   }
 
   const mysql = require("mysql2/promise");
-  const connection = await mysql.createConnection("mysql://root:5344@localhost:3306/copas");
+  const connection = await mysql.createConnection("mysql://root:root@localhost:3306/copas");
   console.log("Conectou no MySQL!");
   global.connection = connection;
   return connection;
